@@ -13,5 +13,9 @@ GitHub: [https://github.com/kenjiSpecial/tubugl-gpgpu](https://github.com/kenjiS
 
 [codes](https://github.com/kenjiSpecial/tubugl-gpgpu/tree/master/examples/app01) | [sources for SwapRendering](https://github.com/kenjiSpecial/tubugl-gpgpu/blob/master/src/swapRenderer.js)
 
+[![](./app02/thumbnail.png)](./app02/index.html)
+
+[codes](https://github.com/kenjiSpecial/tubugl-gpgpu/tree/master/examples/app02) | [sources for SwapRendering](https://github.com/kenjiSpecial/tubugl-gpgpu/blob/master/src/swapRenderer.js)
+
 
 all examples were made with [tubugl](https://github.com/kenjiSpecial/tubugl)
