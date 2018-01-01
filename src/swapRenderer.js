@@ -53,7 +53,7 @@ export class SwapRenderer {
 		this.isDebug = params.isDebug;
 
 		this._makeProgram(params);
-		this._makeFramebuffer();
+		this._makeFramebuffer(params);
 
 		if (params.isDebug) this._makeDebugProgram();
 	}
@@ -77,7 +77,11 @@ export class SwapRenderer {
 		return this;
 	}
 
-	update() {
+	/**
+	 *
+	 * @param {*} textures
+	 */
+	update(textures = {}) {
 		this._buffers.write.bind().updateViewport();
 
 		this._program.bind();
@@ -88,6 +92,11 @@ export class SwapRenderer {
 		this._gl.disable(BLEND);
 		this._program.setUniformTexture(this._buffers.read.texture, 'uTexture');
 		this._buffers.read.texture.activeTexture().bind();
+		for (let key in textures) {
+			let texture = textures[key];
+			this._program.setUniformTexture(texture, key);
+			texture.activeTexture().bind();
+		}
 
 		this._positionBuffer.bind().attribPointer(this._program);
 
@@ -142,10 +151,11 @@ export class SwapRenderer {
 		this._gl.uniform1f(this._uDebugWindoRateLocation, this._height / this._width);
 	}
 
-	_makeFramebuffer() {
+	_makeFramebuffer(params) {
 		let frameBuffer0 = new FrameBuffer(
 			this._gl,
 			{
+				dataArray: params.dataArray,
 				type: FLOAT
 			},
 			this._width,
@@ -156,6 +166,7 @@ export class SwapRenderer {
 		let frameBuffer1 = new FrameBuffer(
 			this._gl,
 			{
+				dataArray: params.dataArray,
 				type: FLOAT
 			},
 			this._width,
@@ -169,5 +180,17 @@ export class SwapRenderer {
 			front: frameBuffer0,
 			back: frameBuffer1
 		};
+	}
+
+	getWriteTexture() {
+		return this._buffers.write.texture;
+	}
+
+	getReadTexture() {
+		return this._buffers.read.texture;
+	}
+
+	getCurrentTexture() {
+		return this.getWriteTexture();
 	}
 }
