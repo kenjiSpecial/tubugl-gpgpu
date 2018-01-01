@@ -3,7 +3,7 @@ const TweenMax = require('gsap');
 const Stats = require('stats.js');
 
 import { Program, ArrayBuffer } from 'tubugl-core';
-import { SwapRendering } from '../../index';
+import { SwapRenderer } from '../../index';
 import { SRC_ALPHA, ONE, BLEND } from 'tubugl-constants';
 
 const vertexShader = `
@@ -100,7 +100,7 @@ export default class App {
 			count: particleNum
 		};
 
-		this._swapRendering = new SwapRendering(
+		this._swapRenderer = new SwapRenderer(
 			this.gl,
 			{
 				fragmentShaderSrc: positionFragmentSrc,
@@ -110,7 +110,7 @@ export default class App {
 			32
 		);
 
-		this._swapRendering.setSize(window.innerWidth - 256 - 30, 20, 256, 256);
+		this._swapRenderer.setSize(window.innerWidth - 256 - 30, 20, 256, 256);
 	}
 
 	animateIn() {
@@ -121,7 +121,7 @@ export default class App {
 	loop() {
 		if (this.stats) this.stats.update();
 
-		this._swapRendering.update();
+		this._swapRenderer.update();
 
 		this.gl.clearColor(0, 0, 0, 1);
 		this.gl.clear(this.gl.COLOR_BUFFER_BIT);
@@ -133,9 +133,9 @@ export default class App {
 		this.gl.blendFunc(SRC_ALPHA, ONE);
 		this.gl.drawArrays(this.gl.POINTS, 0, this._obj.count);
 
-		if (this._isDebugView) this._swapRendering.renderDebugView();
+		if (this._isDebugView) this._swapRenderer.renderDebugView();
 
-		this._swapRendering.swap();
+		this._swapRenderer.swap();
 	}
 
 	animateOut() {
@@ -184,7 +184,7 @@ export default class App {
 		this.canvas.height = this._height;
 		this.gl.viewport(0, 0, this._width, this._height);
 
-		this._swapRendering.setSize(window.innerWidth - 256 - 30, 20, 256, 256);
+		this._swapRenderer.setSize(window.innerWidth - 256 - 30, 20, 256, 256);
 	}
 
 	destroy() {}

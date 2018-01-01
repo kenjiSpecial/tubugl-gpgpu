@@ -1,1 +1,1 @@
-export { SwapRendering } from './src/swapRendering';
+export { SwapRenderer } from './src/swapRenderer';

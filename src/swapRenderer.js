@@ -31,7 +31,7 @@ void main(){
 	gl_FragColor = vec4(texture2D( uTexture, vUv).rgb, 1.0);
 }`;
 
-export class SwapRendering {
+export class SwapRenderer {
 	/**
 	 *
 	 * @param {webGlContext} gl
