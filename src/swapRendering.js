@@ -1,5 +1,12 @@
-import { Program, ArrayBuffer, FrameBuffer } from 'tubugl-core';
-import { FLOAT, TRIANGLES, UNSIGNED_SHORT } from 'tubugl-constants';
+import {
+	Program,
+	ArrayBuffer,
+	FrameBuffer
+} from 'tubugl-core';
+import {
+	FLOAT,
+	TRIANGLES
+} from 'tubugl-constants';
 
 const vertexShader = `
 precision mediump float;
@@ -143,10 +150,14 @@ export class SwapRendering {
 	}
 
 	_makeFramebuffer() {
-		let frameBuffer0 = new FrameBuffer(this._gl, { type: FLOAT }, this._width, this._height);
+		let frameBuffer0 = new FrameBuffer(this._gl, {
+			type: FLOAT
+		}, this._width, this._height);
 		frameBuffer0.unbind();
 
-		let frameBuffer1 = new FrameBuffer(this._gl, { type: FLOAT }, this._width, this._height);
+		let frameBuffer1 = new FrameBuffer(this._gl, {
+			type: FLOAT
+		}, this._width, this._height);
 		frameBuffer1.unbind();
 
 		this._buffers = {
