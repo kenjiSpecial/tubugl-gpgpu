@@ -108,7 +108,7 @@ export default class App {
 
 		for (let ii = 0; ii < particleNum; ii++) {
 			positions[4 * ii + 0] = (ii % side) / side * 1 - 0.5;
-			positions[4 * ii + 1] = parseInt(ii / side) / side * 1 - 1.5;
+			positions[4 * ii + 1] = parseInt(ii / side) / side * 1 - 0.5;
 			positions[4 * ii + 2] = (ii % side) / side;
 			positions[4 * ii + 3] = parseInt(ii / side) / side;
 		}
@@ -136,7 +136,7 @@ export default class App {
 		let dataArray = [];
 		for (let ii = 0; ii < 32 * 32; ii++) {
 			dataArray[4 * ii + 0] = 2 * Math.random() - 1;
-			dataArray[4 * ii + 1] = -1 - 2 * Math.random();
+			dataArray[4 * ii + 1] = -2 * Math.random();
 			dataArray[4 * ii + 2] = 0;
 			dataArray[4 * ii + 3] = 1;
 		}
