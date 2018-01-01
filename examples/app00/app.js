@@ -2,8 +2,13 @@ const dat = require('dat.gui/build/dat.gui.min');
 const TweenMax = require('gsap');
 const Stats = require('stats.js');
 
-import { Program, ArrayBuffer } from 'tubugl-core';
-import { SwapRendering } from '../../index';
+import {
+	Program,
+	ArrayBuffer
+} from 'tubugl-core';
+import {
+	SwapRendering
+} from '../../index';
 
 const vertexShader = `
 attribute vec4 position;
@@ -100,8 +105,7 @@ export default class App {
 		};
 
 		this._swapRendering = new SwapRendering(
-			this.gl,
-			{
+			this.gl, {
 				fragmentShaderSrc: positionFragmentSrc,
 				isDebug: true
 			},

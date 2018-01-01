@@ -5,4 +5,6 @@ GitHub: [https://github.com/kenjiSpecial/tubugl-gpgpu](https://github.com/kenjiS
 
 [![](./app00/thumbnail.png)](./app00/index.html)
 
+[codes](https://github.com/kenjiSpecial/tubugl-gpgpu/tree/master/examples/app00) | [sources for SwapRendering](https://github.com/kenjiSpecial/tubugl-gpgpu)
+
 all examples were made with [tubugl](https://github.com/kenjiSpecial/tubugl)
