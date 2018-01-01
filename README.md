@@ -1,4 +1,4 @@
-# parcel-prototype-kit
+# tubugl-gpgpu
 
 [![NPM version][npm-image]][npm-url] 
 
