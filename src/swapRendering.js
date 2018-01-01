@@ -1,12 +1,5 @@
-import {
-	Program,
-	ArrayBuffer,
-	FrameBuffer
-} from 'tubugl-core';
-import {
-	FLOAT,
-	TRIANGLES
-} from 'tubugl-constants';
+import { Program, ArrayBuffer, FrameBuffer } from 'tubugl-core';
+import { FLOAT, TRIANGLES, BLEND, ONE, ZERO } from 'tubugl-constants';
 
 const vertexShader = `
 precision mediump float;
@@ -92,6 +85,7 @@ export class SwapRendering {
 		this._gl.clearColor(0, 0, 0, 1);
 		this._gl.clear(this._gl.COLOR_BUFFER_BIT);
 
+		this._gl.disable(BLEND);
 		this._program.setUniformTexture(this._buffers.read.texture, 'uTexture');
 		this._buffers.read.texture.activeTexture().bind();
 
@@ -118,8 +112,7 @@ export class SwapRendering {
 		this._buffers.write.texture.activeTexture().bind();
 
 		this._positionBuffer.bind().attribPointer(this._debugProgram);
-
-		// render
+		this._gl.disable(BLEND);
 		this._gl.drawArrays(TRIANGLES, 0, this._drawCnt);
 
 		return this;
@@ -150,14 +143,24 @@ export class SwapRendering {
 	}
 
 	_makeFramebuffer() {
-		let frameBuffer0 = new FrameBuffer(this._gl, {
-			type: FLOAT
-		}, this._width, this._height);
+		let frameBuffer0 = new FrameBuffer(
+			this._gl,
+			{
+				type: FLOAT
+			},
+			this._width,
+			this._height
+		);
 		frameBuffer0.unbind();
 
-		let frameBuffer1 = new FrameBuffer(this._gl, {
-			type: FLOAT
-		}, this._width, this._height);
+		let frameBuffer1 = new FrameBuffer(
+			this._gl,
+			{
+				type: FLOAT
+			},
+			this._width,
+			this._height
+		);
 		frameBuffer1.unbind();
 
 		this._buffers = {

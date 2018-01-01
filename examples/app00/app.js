@@ -2,13 +2,9 @@ const dat = require('dat.gui/build/dat.gui.min');
 const TweenMax = require('gsap');
 const Stats = require('stats.js');
 
-import {
-	Program,
-	ArrayBuffer
-} from 'tubugl-core';
-import {
-	SwapRendering
-} from '../../index';
+import { Program, ArrayBuffer } from 'tubugl-core';
+import { SwapRendering } from '../../index';
+import { SRC_ALPHA, ONE, BLEND } from 'tubugl-constants';
 
 const vertexShader = `
 attribute vec4 position;
@@ -54,7 +50,7 @@ export default class App {
 		this._height = params.height ? params.height : window.innerHeight;
 
 		this.canvas = document.createElement('canvas');
-		this.gl = this.canvas.getContext('webgl');
+		this.gl = this.canvas.getContext('webgl', { antialias: true });
 
 		if (!this.gl.getExtension('OES_texture_float'))
 			throw new Error('This sddemo requires the OES_texture_float extension');
@@ -105,7 +101,8 @@ export default class App {
 		};
 
 		this._swapRendering = new SwapRendering(
-			this.gl, {
+			this.gl,
+			{
 				fragmentShaderSrc: positionFragmentSrc,
 				isDebug: true
 			},
@@ -113,7 +110,7 @@ export default class App {
 			32
 		);
 
-		this._swapRendering.setSize(20, 20, 256, 256);
+		this._swapRendering.setSize(window.innerWidth - 256 - 30, 20, 256, 256);
 	}
 
 	animateIn() {
@@ -132,9 +129,12 @@ export default class App {
 
 		this._obj.program.bind();
 		this._obj.positionBuffer.bind().attribPointer(this._obj.program);
+		this.gl.enable(BLEND);
+		this.gl.blendFunc(SRC_ALPHA, ONE);
 		this.gl.drawArrays(this.gl.POINTS, 0, this._obj.count);
 
 		if (this._isDebugView) this._swapRendering.renderDebugView();
+
 		this._swapRendering.swap();
 	}
 
@@ -183,6 +183,8 @@ export default class App {
 		this.canvas.width = this._width;
 		this.canvas.height = this._height;
 		this.gl.viewport(0, 0, this._width, this._height);
+
+		this._swapRendering.setSize(window.innerWidth - 256 - 30, 20, 256, 256);
 	}
 
 	destroy() {}
