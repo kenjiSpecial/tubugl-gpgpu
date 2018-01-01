@@ -1,4 +1,4 @@
-# parcel-prototype-kit
+# tubugl-gpgpu
 
 [![NPM version][npm-image]][npm-url] 
 
@@ -17,7 +17,7 @@ yarn add tubugl-gpgpu
 
 ## examples
 
-https://kenjispecial.github.io/tubugl-helper/
+https://kenjispecial.github.io/tubugl-gpgpu/
 
 ## Running the examples locally
 
