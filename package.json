@@ -1,6 +1,6 @@
 {
   "name": "tubugl-gpgpu",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "gpgpu util for tubugl",
   "main": "index.js",
   "license": "MIT",
@@ -8,7 +8,9 @@
     "app00": "parcel examples/app00/index.html --no-hmr",
     "app01": "parcel examples/app01/index.html --no-hmr",
     "dist00": "parcel build examples/app00/index.html -d docs/app00 --public-url ./",
+    "dist01": "parcel build examples/app01/index.html -d docs/app01 --public-url ./",
     "screenshot00": "node ./node/screenshot.js --dir=app00",
+    "screenshot01": "node ./node/screenshot.js --dir=app01",
     "docs": "python -m SimpleHTTPServer 8000"
   },
   "dependencies": {
