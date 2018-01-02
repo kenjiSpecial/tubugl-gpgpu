@@ -1,5 +1,5 @@
 import { Program, ArrayBuffer, FrameBuffer } from 'tubugl-core';
-import { FLOAT, TRIANGLES, BLEND, ONE, ZERO } from 'tubugl-constants';
+import { FLOAT, TRIANGLES, BLEND, ONE, ZERO, HALF_FLOAT } from 'tubugl-constants';
 
 const vertexShader = `
 precision mediump float;
@@ -51,6 +51,7 @@ export class SwapRenderer {
 			height: 64
 		};
 		this.isDebug = params.isDebug;
+		this._isFloatTexture = params.isFloatTexture;
 
 		this._makeProgram(params);
 		this._makeFramebuffer(params);
@@ -167,7 +168,7 @@ export class SwapRenderer {
 			this._gl,
 			{
 				dataArray: params.dataArray,
-				type: FLOAT
+				type: this._isFloatTexture ? FLOAT : HALF_FLOAT
 			},
 			this._width,
 			this._height

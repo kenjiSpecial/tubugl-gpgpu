@@ -78,8 +78,13 @@ export default class App {
 			alpha: false
 		});
 
-		if (!this.gl.getExtension('OES_texture_float'))
-			throw new Error('This sddemo requires the OES_texture_float extension');
+		if (!this.gl.getExtension('OES_texture_float')) {
+			let ext = this.gl.getExtension('OES_texture_half_float');
+			this._isFloatTexture = false;
+			if (!ext) throw new Error('This sddemo requires the OES_texture_float extension');
+		} else {
+			this._isFloatTexture = true;
+		}
 
 		this._setClear();
 		this._makeBox();
@@ -101,15 +106,25 @@ export default class App {
 	}
 	_setClear() {
 		this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-		// this.gl.enable(DEPTH);
+		this.gl.enable(DEPTH);
 	}
 
 	_makeBox() {
 		let side = 20;
-		this._box = new Cube(this.gl, side, side, side, 1, 1, 1, {
-			isWire: false,
-			side: 'front'
-		});
+		this._box = new Cube(
+			this.gl,
+			{
+				isWire: false,
+				side: 'front',
+				isFloatTexture: this._isFloatTexture
+			},
+			side,
+			side,
+			side,
+			1,
+			1,
+			1
+		);
 		// this._box.position.y = side * 1.5;
 	}
 

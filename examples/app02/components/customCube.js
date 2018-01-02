@@ -66,15 +66,26 @@ void main(){
 }`;
 
 export class Cube extends Object3D {
+	/**
+	 *
+	 * @param {*} gl
+	 * @param {*} params
+	 * @param {*} width
+	 * @param {*} height
+	 * @param {*} depth
+	 * @param {*} widthSegment
+	 * @param {*} heightSegment
+	 * @param {*} depthSegment
+	 */
 	constructor(
 		gl,
+		params = { isDepthTest: true },
 		width = 100,
 		height = 100,
 		depth = 100,
 		widthSegment = 1,
 		heightSegment = 1,
-		depthSegment = 1,
-		params = { isDepthTest: true }
+		depthSegment = 1
 	) {
 		super(gl, params);
 
@@ -85,6 +96,7 @@ export class Cube extends Object3D {
 		this._heightSegment = heightSegment;
 		this._depthSegment = depthSegment;
 		this._boxNum = 32 * 32;
+		this._isFloatTexture = params.isFloatTexture;
 
 		this._makeProgram(params);
 		this._makeBuffer(params);
@@ -212,6 +224,7 @@ export class Cube extends Object3D {
 		this._swapRenderer = new SwapRenderer(
 			this._gl,
 			{
+				isFloatTexture: this._isFloatTexture,
 				fragmentShaderSrc: positionFragmentSrc,
 				isDebug: true
 			},

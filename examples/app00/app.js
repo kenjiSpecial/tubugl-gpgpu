@@ -52,8 +52,13 @@ export default class App {
 		this.canvas = document.createElement('canvas');
 		this.gl = this.canvas.getContext('webgl', { antialias: true });
 
-		if (!this.gl.getExtension('OES_texture_float'))
-			throw new Error('This sddemo requires the OES_texture_float extension');
+		if (!this.gl.getExtension('OES_texture_float')) {
+			let ext = this.gl.getExtension('OES_texture_half_float');
+			this._isFloatTexture = false;
+			if (!ext) throw new Error('This sddemo requires the OES_texture_float extension');
+		} else {
+			this._isFloatTexture = true;
+		}
 
 		if (params.isDebug) {
 			this.stats = new Stats();
@@ -104,7 +109,8 @@ export default class App {
 			this.gl,
 			{
 				fragmentShaderSrc: positionFragmentSrc,
-				isDebug: true
+				isDebug: true,
+				isFloatTexture: this._isFloatTexture
 			},
 			32,
 			32
