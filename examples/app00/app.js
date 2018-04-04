@@ -1,9 +1,9 @@
-const dat = require('dat.gui/build/dat.gui.min');
+// const dat = require('dat.gui/build/dat.gui.min');
 const TweenMax = require('gsap');
-const Stats = require('stats.js');
+// const Stats = require('stats.js');
 
 import { Program, ArrayBuffer } from 'tubugl-core';
-import { SwapRenderer } from '../../index';
+import { SwapRenderer } from '../../src/index';
 import { SRC_ALPHA, ONE, BLEND } from 'tubugl-constants';
 
 const vertexShader = `
@@ -61,9 +61,9 @@ export default class App {
 		}
 
 		if (params.isDebug) {
-			this.stats = new Stats();
-			document.body.appendChild(this.stats.dom);
-			this._addGui();
+			// this.stats = new Stats();
+			// document.body.appendChild(this.stats.dom);
+			// this._addGui();
 		} else {
 			let descId = document.getElementById('tubugl-desc');
 			descId.style.display = 'none';
@@ -181,6 +181,7 @@ export default class App {
 			this.playAndStopGui.name('play');
 		}
 	}
+	
 
 	resize(width, height) {
 		this._width = width;

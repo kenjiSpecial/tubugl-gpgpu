@@ -22,7 +22,7 @@ import {
 } from 'tubugl-constants';
 import { generateWireframeIndices } from 'tubugl-utils';
 import { Object3D } from 'tubugl-3d-shape/src/object3D';
-import { SwapRenderer } from '../../../src/swapRenderer';
+import { SwapRenderer } from '../../src/index';
 
 export const cubeCollectionShaderVertSrc = `
 attribute vec4 position;

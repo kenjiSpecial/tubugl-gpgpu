@@ -1,9 +1,9 @@
-const dat = require('dat.gui/build/dat.gui.min');
+// const dat = require('dat.gui/build/dat.gui.min');
 const TweenMax = require('gsap');
-const Stats = require('stats.js');
+// const Stats = require('stats.js');
 
 import { Program, ArrayBuffer } from 'tubugl-core';
-import { SwapRenderer } from '../../index';
+import { SwapRenderer } from '../../src/index';
 import { SRC_ALPHA, ONE, BLEND } from 'tubugl-constants';
 
 const vertexShader = `
@@ -85,9 +85,9 @@ export default class App {
 			throw new Error('This sddemo requires the OES_texture_float extension');
 
 		if (params.isDebug) {
-			this.stats = new Stats();
-			document.body.appendChild(this.stats.dom);
-			this._addGui();
+			// this.stats = new Stats();
+			// document.body.appendChild(this.stats.dom);
+			// this._addGui();
 		} else {
 			let descId = document.getElementById('tubugl-desc');
 			descId.style.display = 'none';
@@ -98,13 +98,13 @@ export default class App {
 	}
 
 	_addGui() {
-		this.gui = new dat.GUI();
-		this.playAndStopGui = this.gui.add(this, '_playAndStop').name('pause');
-		this._isDebugView = true;
-		this.DebugViewGui = this.gui
-			.add(this, '_isDebugView')
-			.name('isDebugView')
-			.onChange(() => {});
+		// this.gui = new dat.GUI();
+		// this.playAndStopGui = this.gui.add(this, '_playAndStop').name('pause');
+		// this._isDebugView = true;
+		// this.DebugViewGui = this.gui
+		// 	.add(this, '_isDebugView')
+		// 	.name('isDebugView')
+		// 	.onChange(() => {});
 	}
 
 	_makeProgram() {
@@ -237,10 +237,10 @@ export default class App {
 		this.isLoop = !this.isLoop;
 		if (this.isLoop) {
 			TweenMax.ticker.addEventListener('tick', this.loop, this);
-			this.playAndStopGui.name('pause');
+			// this.playAndStopGui.name('pause');
 		} else {
 			TweenMax.ticker.removeEventListener('tick', this.loop, this);
-			this.playAndStopGui.name('play');
+			// this.playAndStopGui.name('play');
 		}
 	}
 

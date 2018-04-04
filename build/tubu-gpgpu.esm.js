@@ -31,7 +31,7 @@ void main(){
 	gl_FragColor = vec4(texture2D( uTexture, vUv).rgb, 1.0);
 }`;
 
-export class SwapRenderer {
+class SwapRenderer {
 	/**
 	 *
 	 * @param {webGlContext} gl
@@ -195,3 +195,7 @@ export class SwapRenderer {
 		return this.getWriteTexture();
 	}
 }
+
+// console.log('[tubugl-gpgpu] version: 1.1.0, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
+
+export { SwapRenderer };

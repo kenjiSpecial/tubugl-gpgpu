@@ -1,12 +1,12 @@
-const dat = require('dat.gui/build/dat.gui.min');
+// const dat = require('dat.gui/build/dat.gui.min');
 const TweenLite = require('gsap/TweenLite');
-const Stats = require('stats.js');
+// const Stats = require('stats.js');
 
 import { SRC_ALPHA, ONE, BLEND, DEPTH, COLOR_BUFFER_BIT, DEPTH_BUFFER_BIT } from 'tubugl-constants';
 
 // import { Cube } from 'tubugl-3d-shape';
 import { Cube } from './components/customCube';
-import { NormalHelper, GridHelper } from 'tubugl-helper';
+// import { NormalHelper, GridHelper } from 'tubugl-helper';
 import { PerspectiveCamera, CameraController } from 'tubugl-camera';
 
 const vertexShader = `
@@ -93,9 +93,9 @@ export default class App {
 		this._makeCameraController();
 
 		if (params.isDebug) {
-			this.stats = new Stats();
-			document.body.appendChild(this.stats.dom);
-			this._addGui();
+			// this.stats = new Stats();
+			// document.body.appendChild(this.stats.dom);
+			// this._addGui();
 		} else {
 			let descId = document.getElementById('tubugl-desc');
 			descId.style.display = 'none';
@@ -130,7 +130,7 @@ export default class App {
 
 	_makeHelper() {
 		// this._normalHelper = new NormalHelper(this.gl, this._box);
-		this._gridHelper = new GridHelper(this.gl, 1000, 1000, 20, 20);
+		// this._gridHelper = new GridHelper(this.gl, 1000, 1000, 20, 20);
 	}
 
 	_makeCamera() {
@@ -148,8 +148,8 @@ export default class App {
 	}
 
 	_addGui() {
-		this.gui = new dat.GUI();
-		this.playAndStopGui = this.gui.add(this, '_playAndStop').name('pause');
+		// this.gui = new dat.GUI();
+		// this.playAndStopGui = this.gui.add(this, '_playAndStop').name('pause');
 		// this._boxGUIFolder = this.gui.addFolder('rounding  cube');
 		// this._box.addGui(this._boxGUIFolder);
 		// this._boxGUIFolder.open();
@@ -169,8 +169,6 @@ export default class App {
 
 		this._camera.update();
 		this._box.render(this._camera);
-		// this._gridHelper.render(this._camera);
-		// this._box.debugRender();
 	}
 
 	animateOut() {
@@ -204,10 +202,10 @@ export default class App {
 		this.isLoop = !this.isLoop;
 		if (this.isLoop) {
 			TweenLite.ticker.addEventListener('tick', this.loop, this);
-			this.playAndStopGui.name('pause');
+			// this.playAndStopGui.name('pause');
 		} else {
 			TweenLite.ticker.removeEventListener('tick', this.loop, this);
-			this.playAndStopGui.name('play');
+			// this.playAndStopGui.name('play');
 		}
 	}
 

@@ -1,0 +1,208 @@
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('tubugl-core'), require('tubugl-constants')) :
+	typeof define === 'function' && define.amd ? define(['exports', 'tubugl-core', 'tubugl-constants'], factory) :
+	(factory((global.Tubu = {}),global.tubuglCore,global.tubuglConstants));
+}(this, (function (exports,tubuglCore,tubuglConstants) { 'use strict';
+
+	const vertexShader = `
+precision mediump float;
+
+attribute vec4 position;
+
+uniform float uWindowRate;
+
+varying vec2 vUv;
+
+void main() {
+	float x = mix(-1., 1.0 + uWindowRate * 2.0, position.x);
+	float y = mix(-1., 1.0 + 1.0/uWindowRate * 2.0, position.y);
+	float uvX = mix(0., 1.0 + uWindowRate, position.x);
+	float uvY = 1.0 - mix(0., 1.0 + 1.0/uWindowRate, position.y);
+
+	gl_Position = vec4(x, y, position.z, 1.0);
+	vUv = vec2(uvX, uvY);
+}`;
+
+	const debugFragmentShader = `
+precision mediump float;
+
+varying vec2 vUv;
+
+uniform sampler2D uTexture;
+
+void main(){
+	gl_FragColor = vec4(texture2D( uTexture, vUv).rgb, 1.0);
+}`;
+
+	class SwapRenderer {
+		/**
+		 *
+		 * @param {webGlContext} gl
+		 * @param {{fragmentShaderSrc: string, isDebug: boolean}} params
+		 * @param {*} width
+		 * @param {*} height
+		 */
+		constructor(gl, params, width = 128, height = 128) {
+			this._gl = gl;
+			this._width = width;
+			this._height = height;
+
+			this.debugSize = {
+				x: 30,
+				y: 30,
+				width: 64,
+				height: 64
+			};
+			this.isDebug = params.isDebug;
+			this._isFloatTexture = params.isFloatTexture;
+
+			this._makeProgram(params);
+			this._makeFramebuffer(params);
+
+			if (params.isDebug) this._makeDebugProgram();
+		}
+
+		setSize(x, y, width, height) {
+			if (x) this.debugSize.x = x;
+			if (y) this.debugSize.y = y;
+			if (width) this.debugSize.width = width;
+			if (height) this.debugSize.height = height;
+		}
+
+		swap() {
+			if (this._buffers.read === this._buffers.front) {
+				this._buffers.read = this._buffers.back;
+				this._buffers.write = this._buffers.front;
+			} else {
+				this._buffers.read = this._buffers.front;
+				this._buffers.write = this._buffers.back;
+			}
+
+			return this;
+		}
+
+		/**
+		 *
+		 * @param {*} textures
+		 */
+		update(textures = {}) {
+			this._buffers.write.bind().updateViewport();
+
+			this._program.bind();
+
+			this._gl.clearColor(0, 0, 0, 1);
+			this._gl.clear(this._gl.COLOR_BUFFER_BIT);
+
+			this._gl.disable(tubuglConstants.BLEND);
+			
+			this._program.setUniformTexture(this._buffers.read.texture, 'uTexture');
+			
+			for (let key in textures) {
+				let texture = textures[key];
+				this._program.setUniformTexture(texture, key);
+			}
+
+			this._positionBuffer.bind().attribPointer(this._program);
+
+			// render
+			this._gl.drawArrays(tubuglConstants.TRIANGLES, 0, this._drawCnt);
+
+			this._buffers.write.unbind();
+
+			return this;
+		}
+
+		renderDebugView() {
+			this._gl.viewport(
+				this.debugSize.x,
+				this.debugSize.y,
+				this.debugSize.width,
+				this.debugSize.height
+			);
+			this._debugProgram.bind();
+
+			this._debugProgram.setUniformTexture(this._buffers.write.texture, 'uTexture');
+			this._buffers.write.texture.activeTexture().bind();
+
+			this._positionBuffer.bind().attribPointer(this._debugProgram);
+			this._gl.disable(tubuglConstants.BLEND);
+			this._gl.drawArrays(tubuglConstants.TRIANGLES, 0, this._drawCnt);
+
+			return this;
+		}
+
+		resize(width, heigth) {
+			this._width = width;
+			this._height = heigth;
+		}
+
+		_makeProgram(params) {
+			this._program = new tubuglCore.Program(this._gl, vertexShader, params.fragmentShaderSrc);
+			this._positionBuffer = new tubuglCore.ArrayBuffer(this._gl, new Float32Array([0, 0, 1, 0, 0, 1]));
+			this._positionBuffer.setAttribs('position', 2);
+			this._drawCnt = 3;
+
+			this._program.bind();
+			this._uWindoRateLocation = this._program.getUniforms('uWindowRate').location;
+			this._gl.uniform1f(this._uWindoRateLocation, this._height / this._width);
+		}
+
+		_makeDebugProgram() {
+			this._debugProgram = new tubuglCore.Program(this._gl, vertexShader, debugFragmentShader);
+
+			this._debugProgram.bind();
+			this._uDebugWindoRateLocation = this._debugProgram.getUniforms('uWindowRate').location;
+			this._gl.uniform1f(this._uDebugWindoRateLocation, this._height / this._width);
+		}
+
+		_makeFramebuffer(params) {
+			let frameBuffer0 = new tubuglCore.FrameBuffer(
+				this._gl,
+				{
+					dataArray: params.dataArray,
+					type: tubuglConstants.FLOAT
+				},
+				this._width,
+				this._height
+			);
+			frameBuffer0.unbind();
+
+			let frameBuffer1 = new tubuglCore.FrameBuffer(
+				this._gl,
+				{
+					dataArray: params.dataArray,
+					type: this._isFloatTexture ? tubuglConstants.FLOAT : tubuglConstants.HALF_FLOAT
+				},
+				this._width,
+				this._height
+			);
+			frameBuffer1.unbind();
+
+			this._buffers = {
+				read: frameBuffer0,
+				write: frameBuffer1,
+				front: frameBuffer0,
+				back: frameBuffer1
+			};
+		}
+
+		getWriteTexture() {
+			return this._buffers.write.texture;
+		}
+
+		getReadTexture() {
+			return this._buffers.read.texture;
+		}
+
+		getCurrentTexture() {
+			return this.getWriteTexture();
+		}
+	}
+
+	// console.log('[tubugl-gpgpu] version: 1.1.0, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
+
+	exports.SwapRenderer = SwapRenderer;
+
+	Object.defineProperty(exports, '__esModule', { value: true });
+
+})));
