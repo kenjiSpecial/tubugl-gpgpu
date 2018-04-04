@@ -29,19 +29,26 @@ var createClass = function () {
   };
 }();
 
-var vertexShader = '\nprecision mediump float;\n\nattribute vec4 position;\n\nuniform float uWindowRate;\n\nvarying vec2 vUv;\n\nvoid main() {\n\tfloat x = mix(-1., 1.0 + uWindowRate * 2.0, position.x);\n\tfloat y = mix(-1., 1.0 + 1.0/uWindowRate * 2.0, position.y);\n\tfloat uvX = mix(0., 1.0 + uWindowRate, position.x);\n\tfloat uvY = 1.0 - mix(0., 1.0 + 1.0/uWindowRate, position.y);\n\n\tgl_Position = vec4(x, y, position.z, 1.0);\n\tvUv = vec2(uvX, uvY);\n}';
+var vertexShader = '\nprecision mediump float;\n\nattribute vec4 position;\n\nuniform float uWindowRate;\n\nvarying vec2 vUv;\n\nvoid main() {\n\tfloat x = mix(-1., 1.0 + uWindowRate * 2.0, position.x);\n\tfloat y = mix(-1., 1.0 + 1.0/uWindowRate * 2.0, position.y);\n    // float uvX = mix(0., 1.0 + uWindowRate, position.x);\n    float uvX = position.x + uWindowRate * position.x;\n    // float uvY = 1.0 - mix(0., 1.0 + 1.0/uWindowRate, position.y);\n    // float uvY = 1.0 - (1.0 + 1.0/uWindowRate) * position.y;\n    float uvY = 1.0 - position.y - position.y/uWindowRate;\n\n\tgl_Position = vec4(x, y, position.z, 1.0);\n\tvUv = vec2(uvX, uvY);\n}';
 
 var debugFragmentShader = '\nprecision mediump float;\n\nvarying vec2 vUv;\n\nuniform sampler2D uTexture;\n\nvoid main(){\n\tgl_FragColor = vec4(texture2D( uTexture, vUv).rgb, 1.0);\n}';
 
 var SwapRenderer = function () {
 	/**
   *
+  *
   * @param {webGlContext} gl
-  * @param {{fragmentShaderSrc: string, isDebug: boolean}} params
-  * @param {*} width
-  * @param {*} height
+  * @param {Object} params
+  * @param {String} params.fragmentShaderSrc
+  * @param {Boolean} params.isDebug
+  * @param {String} params.prgoramName
+  * @param {Boolean} params.isFloatTexture
+  * @param {Array} params.dataArray
+  * @param {Number} width
+  * @param {Number} height
   */
-	function SwapRenderer(gl, params) {
+	function SwapRenderer(gl) {
+		var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 		var width = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 128;
 		var height = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 128;
 		classCallCheck(this, SwapRenderer);
@@ -49,6 +56,7 @@ var SwapRenderer = function () {
 		this._gl = gl;
 		this._width = width;
 		this._height = height;
+		this._isFloatTexture = params.isFloatTexture;
 
 		this.debugSize = {
 			x: 30,
@@ -57,7 +65,7 @@ var SwapRenderer = function () {
 			height: 64
 		};
 		this.isDebug = params.isDebug;
-		this._isFloatTexture = params.isFloatTexture;
+		this.programs = {};
 
 		this._makeProgram(params);
 		this._makeFramebuffer(params);
@@ -89,13 +97,15 @@ var SwapRenderer = function () {
 
 		/**
    *
-   * @param {*} textures
+   * @param {Object} textures
+   * @param {Object} uniforms
    */
 
 	}, {
 		key: 'update',
 		value: function update() {
 			var textures = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+			var uniforms = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
 			this._buffers.write.bind().updateViewport();
 
@@ -115,6 +125,34 @@ var SwapRenderer = function () {
 
 			this._positionBuffer.bind().attribPointer(this._program);
 
+			for (var _key in uniforms) {
+				var uniform = uniforms[_key];
+				switch (uniform.type) {
+					case 'boolean':
+					case 'float':
+						this._gl.uniform1f(this._program.getUniforms(_key).location, uniform.value);
+						break;
+					case 'vec2':
+						this._gl.uniform2f(this._program.getUniforms(_key).location, uniform.value[0], uniform.value[1]);
+						break;
+					case 'vec3':
+						this._gl.uniform3f(this._program.getUniforms(_key).location, uniform.value[0], uniform.value[1], uniform.value[2]);
+						break;
+					case 'vec4':
+						this._gl.uniform4f(this._program.getUniforms(_key).location, uniform.value[0], uniform.value[1], uniform.value[2], uniform.value[3]);
+						break;
+					case 'mat2':
+						this._gl.uniformMatrix2fv(this._program.getUniforms(_key).location, false, uniform.value);
+						break;
+					case 'mat3':
+						this._gl.uniformMatrix3fv(this._program.getUniforms(_key).location, false, uniform.value);
+						break;
+					case 'mat4':
+						this._gl.uniformMatrix4fv(this._program.getUniforms(_key).location, false, uniform.value);
+						break;
+				}
+			}
+
 			// render
 			this._gl.drawArrays(tubuglConstants.TRIANGLES, 0, this._drawCnt);
 
@@ -129,7 +167,6 @@ var SwapRenderer = function () {
 			this._debugProgram.bind();
 
 			this._debugProgram.setUniformTexture(this._buffers.write.texture, 'uTexture');
-			this._buffers.write.texture.activeTexture().bind();
 
 			this._positionBuffer.bind().attribPointer(this._debugProgram);
 			this._gl.disable(tubuglConstants.BLEND);
@@ -143,10 +180,22 @@ var SwapRenderer = function () {
 			this._width = width;
 			this._height = heigth;
 		}
+
+		/**
+   *
+   * @param {Object} params
+   * @param {String} params.fragmentShaderSrc
+   * @param {String} params.prgoramName
+   *
+   */
+
 	}, {
 		key: '_makeProgram',
 		value: function _makeProgram(params) {
 			this._program = new tubuglCore.Program(this._gl, vertexShader, params.fragmentShaderSrc);
+			var programName = params.programName ? params.programName : 'main';
+			this.programs[programName] = this._program;
+
 			this._positionBuffer = new tubuglCore.ArrayBuffer(this._gl, new Float32Array([0, 0, 1, 0, 0, 1]));
 			this._positionBuffer.setAttribs('position', 2);
 			this._drawCnt = 3;
@@ -185,6 +234,37 @@ var SwapRenderer = function () {
 				front: frameBuffer0,
 				back: frameBuffer1
 			};
+		}
+		/**
+   *
+   * @param {String} shaderSrc fragment shader source file
+   * @param {String} programName programName
+   */
+
+	}, {
+		key: 'addProgram',
+		value: function addProgram(shaderSrc, programName) {
+			this.programs[programName] = new tubuglCore.Program(this._gl, vertexShader, shaderSrc);
+			this.programs[programName].bind();
+			this._uWindoRateLocation = this.programs[programName].getUniforms('uWindowRate').location;
+			this._gl.uniform1f(this._uWindoRateLocation, this._height / this._width);
+			console.log(this.programs[programName]);
+		}
+		/**
+   *
+   * @param {String} programName name for programs
+   */
+
+	}, {
+		key: 'updateProgram',
+		value: function updateProgram(programName) {
+			if (!this.programs[programName]) {
+				console.warn('there is no \'' + programName + '\' program ');
+				return;
+			}
+
+			this._program = this.programs[programName];
+			// console.log(this._program);
 		}
 	}, {
 		key: 'getWriteTexture',

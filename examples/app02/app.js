@@ -74,7 +74,7 @@ export default class App {
 
 		this.canvas = document.createElement('canvas');
 		this.gl = this.canvas.getContext('webgl', {
-			antialias: true,
+			antialias: false,
 			alpha: false
 		});
 
