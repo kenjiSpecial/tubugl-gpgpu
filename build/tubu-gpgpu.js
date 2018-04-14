@@ -211,6 +211,7 @@ void main(){
 		_makeProgram(params) {
 			this._program = new tubuglCore.Program(this._gl, vertexShader, params.fragmentShaderSrc);
 			let programName = params.programName ? params.programName : 'main';
+			this.curProgramName = programName;
 			this.programs[programName] = this._program;
 
 			this._positionBuffer = new tubuglCore.ArrayBuffer(this._gl, new Float32Array([0, 0, 1, 0, 0, 1]));
@@ -266,11 +267,11 @@ void main(){
 		 * @param {String} programName programName
 		 */
 		addProgram(shaderSrc, programName) {
-	        this.programs[programName] = new tubuglCore.Program(this._gl, vertexShader, shaderSrc);
-	        this.programs[programName].bind();
+			this.programs[programName] = new tubuglCore.Program(this._gl, vertexShader, shaderSrc);
+			this.programs[programName].bind();
 			this._uWindoRateLocation = this.programs[programName].getUniforms('uWindowRate').location;
-	        this._gl.uniform1f(this._uWindoRateLocation, this._height / this._width);
-	        console.log(this.programs[programName]);
+			this._gl.uniform1f(this._uWindoRateLocation, this._height / this._width);
+			console.log(this.programs[programName]);
 		}
 		/**
 		 *
@@ -282,8 +283,9 @@ void main(){
 				return;
 			}
 
-	        this._program = this.programs[programName];
-	        // console.log(this._program);
+			this.curProgramName = programName;
+			this._program = this.programs[programName];
+			// console.log(this._program);
 		}
 
 		getWriteTexture() {
@@ -299,7 +301,7 @@ void main(){
 		}
 	}
 
-	// console.log('[tubugl-gpgpu] version: 1.1.0, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
+	// console.log('[tubugl-gpgpu] version: 1.2.1, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
 
 	exports.SwapRenderer = SwapRenderer;
 

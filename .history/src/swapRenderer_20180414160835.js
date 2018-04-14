@@ -280,7 +280,6 @@ export class SwapRenderer {
 			return;
 		}
 
-		this.curProgramName = programName;
 		this._program = this.programs[programName];
 		// console.log(this._program);
 	}

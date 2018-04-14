@@ -194,6 +194,7 @@ var SwapRenderer = function () {
 		value: function _makeProgram(params) {
 			this._program = new tubuglCore.Program(this._gl, vertexShader, params.fragmentShaderSrc);
 			var programName = params.programName ? params.programName : 'main';
+			this.curProgramName = programName;
 			this.programs[programName] = this._program;
 
 			this._positionBuffer = new tubuglCore.ArrayBuffer(this._gl, new Float32Array([0, 0, 1, 0, 0, 1]));
@@ -263,6 +264,7 @@ var SwapRenderer = function () {
 				return;
 			}
 
+			this.curProgramName = programName;
 			this._program = this.programs[programName];
 			// console.log(this._program);
 		}
@@ -285,6 +287,6 @@ var SwapRenderer = function () {
 	return SwapRenderer;
 }();
 
-// console.log('[tubugl-gpgpu] version: 1.1.0, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
+// console.log('[tubugl-gpgpu] version: 1.2.1, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
 
 exports.SwapRenderer = SwapRenderer;
