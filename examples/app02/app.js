@@ -1,5 +1,6 @@
 // const dat = require('dat.gui/build/dat.gui.min');
-const TweenLite = require('gsap/TweenLite');
+// const TweenLite = require('gsap/TweenLite');
+const TweenLite = require('gsap/src/uncompressed/TweenLite');
 // const Stats = require('stats.js');
 
 import { SRC_ALPHA, ONE, BLEND, DEPTH, COLOR_BUFFER_BIT, DEPTH_BUFFER_BIT } from 'tubugl-constants';

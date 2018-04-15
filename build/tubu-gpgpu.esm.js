@@ -258,6 +258,18 @@ class SwapRenderer {
 			back: frameBuffer1
 		};
 	}
+
+	updateTexture(type = 'read') {
+		let frameBuffer;
+
+		if (type == 'read') frameBuffer = this._buffers.read;
+		else frameBuffer = this._buffers.write;
+
+		let oldTexture = frameBuffer.updateTexture();
+
+		return oldTexture;
+	}
+
 	/**
 	 *
 	 * @param {String} shaderSrc fragment shader source file
@@ -298,6 +310,6 @@ class SwapRenderer {
 	}
 }
 
-// console.log('[tubugl-gpgpu] version: 1.2.1, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
+// console.log('[tubugl-gpgpu] version: 1.2.2, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
 
 export { SwapRenderer };

@@ -236,6 +236,20 @@ var SwapRenderer = function () {
 				back: frameBuffer1
 			};
 		}
+	}, {
+		key: 'updateTexture',
+		value: function updateTexture() {
+			var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'read';
+
+			var frameBuffer = void 0;
+
+			if (type == 'read') frameBuffer = this._buffers.read;else frameBuffer = this._buffers.write;
+
+			var oldTexture = frameBuffer.updateTexture();
+
+			return oldTexture;
+		}
+
 		/**
    *
    * @param {String} shaderSrc fragment shader source file
@@ -287,6 +301,6 @@ var SwapRenderer = function () {
 	return SwapRenderer;
 }();
 
-// console.log('[tubugl-gpgpu] version: 1.2.1, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
+// console.log('[tubugl-gpgpu] version: 1.2.2, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
 
 exports.SwapRenderer = SwapRenderer;

@@ -258,6 +258,18 @@ export class SwapRenderer {
 			back: frameBuffer1
 		};
 	}
+
+	updateTexture(type = 'read') {
+		let frameBuffer;
+
+		if (type == 'read') frameBuffer = this._buffers.read;
+		else frameBuffer = this._buffers.write;
+
+		let oldTexture = frameBuffer.updateTexture();
+
+		return oldTexture;
+	}
+
 	/**
 	 *
 	 * @param {String} shaderSrc fragment shader source file

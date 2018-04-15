@@ -2,6 +2,7 @@ const TweenMax = require('gsap');
 import { SRC_ALPHA, ONE, BLEND, DEPTH, COLOR_BUFFER_BIT, DEPTH_BUFFER_BIT } from 'tubugl-constants';
 import { Particle } from './particle';
 import { PerspectiveCamera, CameraController } from 'tubugl-camera';
+const UIL = require('uil');
 
 export default class App {
 	constructor(params = {}) {
@@ -30,9 +31,7 @@ export default class App {
 		this._makeCameraController();
 
 		if (params.isDebug) {
-			// this.stats = new Stats();
-			// document.body.appendChild(this.stats.dom);
-			// this._addGui();
+			this._addGui();
 		} else {
 			let descId = document.getElementById('tubugl-desc');
 			descId.style.display = 'none';
@@ -73,6 +72,30 @@ export default class App {
 		// this._boxGUIFolder = this.gui.addFolder('rounding  cube');
 		// this._box.addGui(this._boxGUIFolder);
 		// this._boxGUIFolder.open();
+		const ui = new UIL.Gui({
+			w: 300
+		}).onChange(this._callback);
+		ui.add('title', {
+			name: 'GUI'
+		});
+		ui.add('fps', {
+			res: 40
+		});
+
+		let button = ui
+			.add('button', {
+				name: 'update frameBuffer',
+				callback: () => {
+					this._updateFramebuffer();
+				}
+			})
+			.listen();
+	}
+
+	_updateFramebuffer() {
+		// console.log('_updateFramebuffer')j;
+		// let prevTexture = this..updateTexture();
+		this._particle.updateTexture();
 	}
 
 	animateIn() {
