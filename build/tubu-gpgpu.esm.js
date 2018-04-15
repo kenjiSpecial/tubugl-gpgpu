@@ -433,7 +433,7 @@ class FrameBufferRenderer {
 		// render
 		this._gl.drawArrays(TRIANGLES, 0, this._drawCnt);
 
-		this._buffers.write.unbind();
+		this.frameBuffer.unbind();
 
 		return this;
 	}
@@ -447,7 +447,7 @@ class FrameBufferRenderer {
 		);
 		this._debugProgram.bind();
 
-		this._debugProgram.setUniformTexture(this._buffers.write.texture, 'uTexture');
+		this._debugProgram.setUniformTexture(this.frameBuffer.texture, 'uTexture');
 
 		this._positionBuffer.bind().attribPointer(this._debugProgram);
 		this._gl.disable(BLEND);
@@ -493,8 +493,7 @@ class FrameBufferRenderer {
 
 	_makeFramebuffer(params = {}) {
 		let frameBuffer = new FrameBuffer(
-			this._gl,
-			{
+			this._gl, {
 				dataArray: params.dataArray,
 				type: FLOAT
 			},
@@ -541,6 +540,6 @@ class FrameBufferRenderer {
 	}
 }
 
-// console.log('[tubugl-gpgpu] version: 1.3.0, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
+// console.log('[tubugl-gpgpu] version: 1.3.1, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
 
 export { SwapRenderer, FrameBufferRenderer };

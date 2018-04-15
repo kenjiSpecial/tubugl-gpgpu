@@ -409,7 +409,7 @@
 				// render
 				this._gl.drawArrays(tubuglConstants.TRIANGLES, 0, this._drawCnt);
 
-				this._buffers.write.unbind();
+				this.frameBuffer.unbind();
 
 				return this;
 			}
@@ -419,7 +419,7 @@
 				this._gl.viewport(this.debugSize.x, this.debugSize.y, this.debugSize.width, this.debugSize.height);
 				this._debugProgram.bind();
 
-				this._debugProgram.setUniformTexture(this._buffers.write.texture, 'uTexture');
+				this._debugProgram.setUniformTexture(this.frameBuffer.texture, 'uTexture');
 
 				this._positionBuffer.bind().attribPointer(this._debugProgram);
 				this._gl.disable(tubuglConstants.BLEND);
@@ -526,7 +526,7 @@
 		return FrameBufferRenderer;
 	}();
 
-	// console.log('[tubugl-gpgpu] version: 1.3.0, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
+	// console.log('[tubugl-gpgpu] version: 1.3.1, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
 
 	exports.SwapRenderer = SwapRenderer;
 	exports.FrameBufferRenderer = FrameBufferRenderer;
