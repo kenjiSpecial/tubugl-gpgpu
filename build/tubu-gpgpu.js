@@ -96,7 +96,7 @@ void main(){
 		 * @param {Object} textures
 		 * @param {Object} uniforms
 		 */
-		update(textures = {}, uniforms = {}) {
+		update(textures = {}, uniforms = {}, enablePrevTexture = true) {
 			this._buffers.write.bind().updateViewport();
 
 			this._program.bind();
@@ -106,7 +106,8 @@ void main(){
 
 			this._gl.disable(tubuglConstants.BLEND);
 
-			this._program.setUniformTexture(this._buffers.read.texture, 'uTexture');
+			if (enablePrevTexture)
+				this._program.setUniformTexture(this._buffers.read.texture, 'uTexture');
 
 			for (let key in textures) {
 				let texture = textures[key];

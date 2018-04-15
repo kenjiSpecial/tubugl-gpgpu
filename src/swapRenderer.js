@@ -93,7 +93,7 @@ export class SwapRenderer {
 	 * @param {Object} textures
 	 * @param {Object} uniforms
 	 */
-	update(textures = {}, uniforms = {}) {
+	update(textures = {}, uniforms = {}, enablePrevTexture = true) {
 		this._buffers.write.bind().updateViewport();
 
 		this._program.bind();
@@ -103,7 +103,8 @@ export class SwapRenderer {
 
 		this._gl.disable(BLEND);
 
-		this._program.setUniformTexture(this._buffers.read.texture, 'uTexture');
+		if (enablePrevTexture)
+			this._program.setUniformTexture(this._buffers.read.texture, 'uTexture');
 
 		for (let key in textures) {
 			let texture = textures[key];

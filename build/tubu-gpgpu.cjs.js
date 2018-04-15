@@ -106,6 +106,7 @@ var SwapRenderer = function () {
 		value: function update() {
 			var textures = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 			var uniforms = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+			var enablePrevTexture = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
 			this._buffers.write.bind().updateViewport();
 
@@ -116,7 +117,7 @@ var SwapRenderer = function () {
 
 			this._gl.disable(tubuglConstants.BLEND);
 
-			this._program.setUniformTexture(this._buffers.read.texture, 'uTexture');
+			if (enablePrevTexture) this._program.setUniformTexture(this._buffers.read.texture, 'uTexture');
 
 			for (var key in textures) {
 				var texture = textures[key];

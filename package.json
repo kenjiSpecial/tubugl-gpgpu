@@ -1,6 +1,6 @@
 {
   "name": "tubugl-gpgpu",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "gpgpu util for tubugl",
   "main": "build/tubu-gpgpu.js",
   "cjs": "build/tubu-gpgpu.cjs.js",
