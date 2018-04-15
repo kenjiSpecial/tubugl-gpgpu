@@ -21,7 +21,7 @@ export default [
 			format: 'umd'
 		},
 		plugins: [
-			// babel(babelrc()),
+			babel(babelrc()),
 			// resolve(), // so Rollup can find `ms`
 			commonjs(),
 			replace({

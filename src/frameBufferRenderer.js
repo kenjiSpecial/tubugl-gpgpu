@@ -1,9 +1,8 @@
 import { Program, ArrayBuffer, FrameBuffer } from 'tubugl-core';
-import { FLOAT, TRIANGLES, BLEND, HALF_FLOAT } from 'tubugl-constants';
-
+import { FLOAT, TRIANGLES, BLEND } from 'tubugl-constants';
 import { vertexShader, debugFragmentShader } from './shader';
 
-export class SwapRenderer {
+export class FrameBufferRenderer {
 	/**
 	 *
 	 *
@@ -38,23 +37,11 @@ export class SwapRenderer {
 		if (params.isDebug) this._makeDebugProgram();
 	}
 
-	setSize(x, y, width, height) {
+	setDebugSize(x, y, width, height) {
 		if (x) this.debugSize.x = x;
 		if (y) this.debugSize.y = y;
 		if (width) this.debugSize.width = width;
 		if (height) this.debugSize.height = height;
-	}
-
-	swap() {
-		if (this._buffers.read === this._buffers.front) {
-			this._buffers.read = this._buffers.back;
-			this._buffers.write = this._buffers.front;
-		} else {
-			this._buffers.read = this._buffers.front;
-			this._buffers.write = this._buffers.back;
-		}
-
-		return this;
 	}
 
 	/**
@@ -62,8 +49,8 @@ export class SwapRenderer {
 	 * @param {Object} textures
 	 * @param {Object} uniforms
 	 */
-	update(textures = {}, uniforms = {}, enablePrevTexture = true) {
-		this._buffers.write.bind().updateViewport();
+	update(textures = {}, uniforms = {}) {
+		this.frameBuffer.bind().updateViewport();
 
 		this._program.bind();
 
@@ -71,9 +58,6 @@ export class SwapRenderer {
 		this._gl.clear(this._gl.COLOR_BUFFER_BIT);
 
 		this._gl.disable(BLEND);
-
-		if (enablePrevTexture)
-			this._program.setUniformTexture(this._buffers.read.texture, 'uTexture');
 
 		for (let key in textures) {
 			let texture = textures[key];
@@ -198,8 +182,8 @@ export class SwapRenderer {
 		this._gl.uniform1f(this._uDebugWindoRateLocation, this._height / this._width);
 	}
 
-	_makeFramebuffer(params) {
-		let frameBuffer0 = new FrameBuffer(
+	_makeFramebuffer(params = {}) {
+		let frameBuffer = new FrameBuffer(
 			this._gl,
 			{
 				dataArray: params.dataArray,
@@ -208,34 +192,12 @@ export class SwapRenderer {
 			this._width,
 			this._height
 		);
-		frameBuffer0.unbind();
-
-		let frameBuffer1 = new FrameBuffer(
-			this._gl,
-			{
-				dataArray: params.dataArray,
-				type: this._isFloatTexture ? FLOAT : HALF_FLOAT
-			},
-			this._width,
-			this._height
-		);
-		frameBuffer1.unbind();
-
-		this._buffers = {
-			read: frameBuffer0,
-			write: frameBuffer1,
-			front: frameBuffer0,
-			back: frameBuffer1
-		};
+		frameBuffer.unbind();
+		this.frameBuffer = frameBuffer;
 	}
 
-	updateTexture(type = 'read') {
-		let frameBuffer;
-
-		if (type == 'read') frameBuffer = this._buffers.read;
-		else frameBuffer = this._buffers.write;
-
-		let oldTexture = frameBuffer.updateTexture();
+	updateTexture() {
+		let oldTexture = this.frameBuffer.updateTexture();
 
 		return oldTexture;
 	}
@@ -250,7 +212,6 @@ export class SwapRenderer {
 		this.programs[programName].bind();
 		this._uWindoRateLocation = this.programs[programName].getUniforms('uWindowRate').location;
 		this._gl.uniform1f(this._uWindoRateLocation, this._height / this._width);
-		console.log(this.programs[programName]);
 	}
 	/**
 	 *
@@ -264,18 +225,9 @@ export class SwapRenderer {
 
 		this.curProgramName = programName;
 		this._program = this.programs[programName];
-		// console.log(this._program);
 	}
 
-	getWriteTexture() {
-		return this._buffers.write.texture;
-	}
-
-	getReadTexture() {
-		return this._buffers.read.texture;
-	}
-
-	getCurrentTexture() {
-		return this.getWriteTexture();
+	getTexture() {
+		return this.frameBuffer.texture;
 	}
 }
