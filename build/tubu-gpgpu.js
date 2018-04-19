@@ -310,7 +310,8 @@
 	  * @param {String} params.fragmentShaderSrc
 	  * @param {Boolean} params.isDebug
 	  * @param {String} params.prgoramName
-	  * @param {Boolean} params.isFloatTexture
+	  * @param {GLenum} params.type specifing the data type of texel data
+	  * @param {GLenum} params.filter
 	  * @param {Array} params.dataArray
 	  * @param {Number} width
 	  * @param {Number} height
@@ -324,7 +325,8 @@
 			this._gl = gl;
 			this._width = width;
 			this._height = height;
-			this._isFloatTexture = params.isFloatTexture;
+			this._type = params.type;
+			this._filter = params.filter;
 
 			this.debugSize = {
 				x: 30,
@@ -474,7 +476,8 @@
 
 				var frameBuffer = new tubuglCore.FrameBuffer(this._gl, {
 					dataArray: params.dataArray,
-					type: tubuglConstants.FLOAT
+					type: this._type,
+					filter: this._filter
 				}, this._width, this._height);
 				frameBuffer.unbind();
 				this.frameBuffer = frameBuffer;
@@ -526,7 +529,7 @@
 		return FrameBufferRenderer;
 	}();
 
-	// console.log('[tubugl-gpgpu] version: 1.3.1, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
+	// console.log('[tubugl-gpgpu] version: 1.3.2, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
 
 	exports.SwapRenderer = SwapRenderer;
 	exports.FrameBufferRenderer = FrameBufferRenderer;
