@@ -264,7 +264,6 @@ var SwapRenderer = function () {
 			this.programs[programName].bind();
 			this._uWindoRateLocation = this.programs[programName].getUniforms('uWindowRate').location;
 			this._gl.uniform1f(this._uWindoRateLocation, this._height / this._width);
-			console.log(this.programs[programName]);
 		}
 		/**
    *
@@ -530,7 +529,7 @@ var FrameBufferRenderer = function () {
 	return FrameBufferRenderer;
 }();
 
-// console.log('[tubugl-gpgpu] version: 1.3.2, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
+// console.log('[tubugl-gpgpu] version: 1.3.3, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
 
 exports.SwapRenderer = SwapRenderer;
 exports.FrameBufferRenderer = FrameBufferRenderer;

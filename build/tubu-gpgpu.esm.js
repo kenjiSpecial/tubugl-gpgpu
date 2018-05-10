@@ -231,8 +231,7 @@ class SwapRenderer {
 
 	_makeFramebuffer(params) {
 		let frameBuffer0 = new FrameBuffer(
-			this._gl,
-			{
+			this._gl, {
 				dataArray: params.dataArray,
 				type: FLOAT
 			},
@@ -242,8 +241,7 @@ class SwapRenderer {
 		frameBuffer0.unbind();
 
 		let frameBuffer1 = new FrameBuffer(
-			this._gl,
-			{
+			this._gl, {
 				dataArray: params.dataArray,
 				type: this._isFloatTexture ? FLOAT : HALF_FLOAT
 			},
@@ -281,7 +279,6 @@ class SwapRenderer {
 		this.programs[programName].bind();
 		this._uWindoRateLocation = this.programs[programName].getUniforms('uWindowRate').location;
 		this._gl.uniform1f(this._uWindoRateLocation, this._height / this._width);
-		console.log(this.programs[programName]);
 	}
 	/**
 	 *
@@ -544,6 +541,6 @@ class FrameBufferRenderer {
 	}
 }
 
-// console.log('[tubugl-gpgpu] version: 1.3.2, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
+// console.log('[tubugl-gpgpu] version: 1.3.3, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
 
 export { SwapRenderer, FrameBufferRenderer };

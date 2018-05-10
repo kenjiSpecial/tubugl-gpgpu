@@ -1,7 +1,19 @@
-import { Program, ArrayBuffer, FrameBuffer } from 'tubugl-core';
-import { FLOAT, TRIANGLES, BLEND, HALF_FLOAT } from 'tubugl-constants';
+import {
+	Program,
+	ArrayBuffer,
+	FrameBuffer
+} from 'tubugl-core';
+import {
+	FLOAT,
+	TRIANGLES,
+	BLEND,
+	HALF_FLOAT
+} from 'tubugl-constants';
 
-import { vertexShader, debugFragmentShader } from './shader';
+import {
+	vertexShader,
+	debugFragmentShader
+} from './shader';
 
 export class SwapRenderer {
 	/**
@@ -200,8 +212,7 @@ export class SwapRenderer {
 
 	_makeFramebuffer(params) {
 		let frameBuffer0 = new FrameBuffer(
-			this._gl,
-			{
+			this._gl, {
 				dataArray: params.dataArray,
 				type: FLOAT
 			},
@@ -211,8 +222,7 @@ export class SwapRenderer {
 		frameBuffer0.unbind();
 
 		let frameBuffer1 = new FrameBuffer(
-			this._gl,
-			{
+			this._gl, {
 				dataArray: params.dataArray,
 				type: this._isFloatTexture ? FLOAT : HALF_FLOAT
 			},
@@ -250,7 +260,6 @@ export class SwapRenderer {
 		this.programs[programName].bind();
 		this._uWindoRateLocation = this.programs[programName].getUniforms('uWindowRate').location;
 		this._gl.uniform1f(this._uWindoRateLocation, this._height / this._width);
-		console.log(this.programs[programName]);
 	}
 	/**
 	 *
