@@ -1,10 +1,9 @@
-// const dat = require('dat.gui/build/dat.gui.min');
+const dat = require('../vendor/dat.gui.min');
 const TweenMax = require('gsap');
-// const Stats = require('stats.js');
+const Stats = require('../vendor/stats.min');
 
 import { Program, ArrayBuffer } from 'tubugl-core';
 import { SwapRenderer } from '../../src/index';
-import { SRC_ALPHA, ONE, BLEND } from 'tubugl-constants';
 
 const vertexShader = `
 attribute vec4 position;
@@ -61,9 +60,9 @@ export default class App {
 		}
 
 		if (params.isDebug) {
-			// this.stats = new Stats();
-			// document.body.appendChild(this.stats.dom);
-			// this._addGui();
+			this.stats = new Stats();
+			document.body.appendChild(this.stats.dom);
+			this._addGui();
 		} else {
 			let descId = document.getElementById('tubugl-desc');
 			descId.style.display = 'none';
@@ -135,8 +134,8 @@ export default class App {
 
 		this._obj.program.bind();
 		this._obj.positionBuffer.bind().attribPointer(this._obj.program);
-		this.gl.enable(BLEND);
-		this.gl.blendFunc(SRC_ALPHA, ONE);
+		this.gl.enable(this.gl.BLEND);
+		this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
 		this.gl.drawArrays(this.gl.POINTS, 0, this._obj.count);
 
 		if (this._isDebugView) this._swapRenderer.renderDebugView();

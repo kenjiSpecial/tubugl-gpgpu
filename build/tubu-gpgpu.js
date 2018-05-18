@@ -1,10 +1,10 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('tubugl-core'), require('tubugl-constants')) :
-	typeof define === 'function' && define.amd ? define(['exports', 'tubugl-core', 'tubugl-constants'], factory) :
-	(factory((global.Tubu = {}),global.tubuglCore,global.tubuglConstants));
-}(this, (function (exports,tubuglCore,tubuglConstants) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('tubugl-core')) :
+	typeof define === 'function' && define.amd ? define(['exports', 'tubugl-core'], factory) :
+	(factory((global.Tubu = {}),global.tubuglCore));
+}(this, (function (exports,tubuglCore) { 'use strict';
 
-	var vertexShader = "\nprecision mediump float;\n\nattribute vec4 position;\n\nuniform float uWindowRate;\n\nvarying vec2 vUv;\n\nvoid main() {\n\tfloat x = mix(-1., 1.0 + uWindowRate * 2.0, position.x);\n\tfloat y = mix(-1., 1.0 + 1.0/uWindowRate * 2.0, position.y);\n    // float uvX = mix(0., 1.0 + uWindowRate, position.x);\n    float uvX = position.x + uWindowRate * position.x;\n    // float uvY = 1.0 - mix(0., 1.0 + 1.0/uWindowRate, position.y);\n    // float uvY = 1.0 - (1.0 + 1.0/uWindowRate) * position.y;\n    float uvY = 1.0 - position.y - position.y/uWindowRate;\n\n\tgl_Position = vec4(x, y, position.z, 1.0);\n\tvUv = vec2(uvX, uvY);\n}";
+	var vertexShader = "\nprecision mediump float;\n\nattribute vec4 position;\n\nuniform float uWindowRate;\n\nvarying vec2 vUv;\n\nvoid main() {\n\tfloat x = mix(-1., 1.0 + uWindowRate * 2.0, position.x);\n\tfloat y = mix(-1., 1.0 + 1.0/uWindowRate * 2.0, position.y);\n    \n    float uvX = position.x + uWindowRate * position.x;\n    float uvY = 1.0 - position.y - position.y/uWindowRate;\n\n\tgl_Position = vec4(x, y, position.z, 1.0);\n\tvUv = vec2(uvX, uvY);\n}";
 
 	var debugFragmentShader = "\nprecision mediump float;\n\nvarying vec2 vUv;\n\nuniform sampler2D uTexture;\n\nvoid main(){\n\tgl_FragColor = vec4(texture2D( uTexture, vUv).rgb, 1.0);\n}";
 
@@ -114,7 +114,7 @@
 				this._gl.clearColor(0, 0, 0, 1);
 				this._gl.clear(this._gl.COLOR_BUFFER_BIT);
 
-				this._gl.disable(tubuglConstants.BLEND);
+				this._gl.disable(this._gl.BLEND);
 
 				if (enablePrevTexture) this._program.setUniformTexture(this._buffers.read.texture, 'uTexture');
 
@@ -154,7 +154,7 @@
 				}
 
 				// render
-				this._gl.drawArrays(tubuglConstants.TRIANGLES, 0, this._drawCnt);
+				this._gl.drawArrays(this._gl.TRIANGLES, 0, this._drawCnt);
 
 				this._buffers.write.unbind();
 
@@ -169,8 +169,8 @@
 				this._debugProgram.setUniformTexture(this._buffers.write.texture, 'uTexture');
 
 				this._positionBuffer.bind().attribPointer(this._debugProgram);
-				this._gl.disable(tubuglConstants.BLEND);
-				this._gl.drawArrays(tubuglConstants.TRIANGLES, 0, this._drawCnt);
+				this._gl.disable(this._gl.BLEND);
+				this._gl.drawArrays(this._gl.TRIANGLES, 0, this._drawCnt);
 
 				return this;
 			}
@@ -219,13 +219,13 @@
 			value: function _makeFramebuffer(params) {
 				var frameBuffer0 = new tubuglCore.FrameBuffer(this._gl, {
 					dataArray: params.dataArray,
-					type: tubuglConstants.FLOAT
+					type: this._gl.FLOAT
 				}, this._width, this._height);
 				frameBuffer0.unbind();
 
 				var frameBuffer1 = new tubuglCore.FrameBuffer(this._gl, {
 					dataArray: params.dataArray,
-					type: this._isFloatTexture ? tubuglConstants.FLOAT : tubuglConstants.HALF_FLOAT
+					type: this._isFloatTexture ? this._gl.FLOAT : this._gl.HALF_FLOAT
 				}, this._width, this._height);
 				frameBuffer1.unbind();
 
@@ -370,7 +370,7 @@
 				this._gl.clearColor(0, 0, 0, 1);
 				this._gl.clear(this._gl.COLOR_BUFFER_BIT);
 
-				this._gl.disable(tubuglConstants.BLEND);
+				this._gl.disable(this._gl.BLEND);
 
 				for (var key in textures) {
 					var texture = textures[key];
@@ -408,7 +408,7 @@
 				}
 
 				// render
-				this._gl.drawArrays(tubuglConstants.TRIANGLES, 0, this._drawCnt);
+				this._gl.drawArrays(this._gl.TRIANGLES, 0, this._drawCnt);
 
 				this.frameBuffer.unbind();
 
@@ -423,8 +423,8 @@
 				this._debugProgram.setUniformTexture(this.frameBuffer.texture, 'uTexture');
 
 				this._positionBuffer.bind().attribPointer(this._debugProgram);
-				this._gl.disable(tubuglConstants.BLEND);
-				this._gl.drawArrays(tubuglConstants.TRIANGLES, 0, this._drawCnt);
+				this._gl.disable(this._gl.BLEND);
+				this._gl.drawArrays(this._gl.TRIANGLES, 0, this._drawCnt);
 
 				return this;
 			}
@@ -528,7 +528,7 @@
 		return FrameBufferRenderer;
 	}();
 
-	// console.log('[tubugl-gpgpu] version: 1.3.3, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
+	// console.log('[tubugl-gpgpu] version: TUBUGL_VERSOIN, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
 
 	exports.SwapRenderer = SwapRenderer;
 	exports.FrameBufferRenderer = FrameBufferRenderer;

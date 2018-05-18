@@ -4,13 +4,6 @@ import {
 	FrameBuffer
 } from 'tubugl-core';
 import {
-	FLOAT,
-	TRIANGLES,
-	BLEND,
-	HALF_FLOAT
-} from 'tubugl-constants';
-
-import {
 	vertexShader,
 	debugFragmentShader
 } from './shader';
@@ -82,7 +75,7 @@ export class SwapRenderer {
 		this._gl.clearColor(0, 0, 0, 1);
 		this._gl.clear(this._gl.COLOR_BUFFER_BIT);
 
-		this._gl.disable(BLEND);
+		this._gl.disable(this._gl.BLEND);
 
 		if (enablePrevTexture)
 			this._program.setUniformTexture(this._buffers.read.texture, 'uTexture');
@@ -150,7 +143,7 @@ export class SwapRenderer {
 		}
 
 		// render
-		this._gl.drawArrays(TRIANGLES, 0, this._drawCnt);
+		this._gl.drawArrays(this._gl.TRIANGLES, 0, this._drawCnt);
 
 		this._buffers.write.unbind();
 
@@ -169,8 +162,8 @@ export class SwapRenderer {
 		this._debugProgram.setUniformTexture(this._buffers.write.texture, 'uTexture');
 
 		this._positionBuffer.bind().attribPointer(this._debugProgram);
-		this._gl.disable(BLEND);
-		this._gl.drawArrays(TRIANGLES, 0, this._drawCnt);
+		this._gl.disable(this._gl.BLEND);
+		this._gl.drawArrays(this._gl.TRIANGLES, 0, this._drawCnt);
 
 		return this;
 	}
@@ -214,7 +207,7 @@ export class SwapRenderer {
 		let frameBuffer0 = new FrameBuffer(
 			this._gl, {
 				dataArray: params.dataArray,
-				type: FLOAT
+				type: this._gl.FLOAT
 			},
 			this._width,
 			this._height
@@ -224,7 +217,7 @@ export class SwapRenderer {
 		let frameBuffer1 = new FrameBuffer(
 			this._gl, {
 				dataArray: params.dataArray,
-				type: this._isFloatTexture ? FLOAT : HALF_FLOAT
+				type: this._isFloatTexture ? this._gl.FLOAT : this._gl.HALF_FLOAT
 			},
 			this._width,
 			this._height

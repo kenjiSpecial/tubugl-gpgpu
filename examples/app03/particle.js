@@ -1,5 +1,4 @@
 import { Program, ArrayBuffer, IndexArrayBuffer } from 'tubugl-core';
-import { SRC_ALPHA, ONE_MINUS_SRC_ALPHA, CULL_FACE } from 'tubugl-constants';
 import { mathUtils } from 'tubugl-utils';
 import { SwapRenderer } from '../../src/swapRenderer';
 
@@ -208,20 +207,10 @@ export class Particle {
 		this.update(camera, time).draw();
 	}
 	draw() {
-		// if (this._side === 'double') {
-		this._gl.disable(CULL_FACE);
-		// } else if (this._side === 'front') {
-		// 	this._gl.enable(CULL_FACE);
-		// 	this._gl.cullFace(BACK);
-		// } else {
-		// 	this._gl.enable(CULL_FACE);
-		// 	this._gl.cullFace(FRONT);
-		// }
-
+		this._gl.disable(this._gl.CULL_FACE);
 		this._gl.enable(this._gl.BLEND);
-		this._gl.blendFunc(SRC_ALPHA, ONE_MINUS_SRC_ALPHA);
+		this._gl.blendFunc(this._gl.SRC_ALPHA, this._gl.ONE_MINUS_SRC_ALPHA);
 		this._gl.viewport(0, 0, this._width, this._height);
-		// console.log(this._cnt);
 		this._gl.drawElements(this._gl.TRIANGLES, this._cnt, this._gl.UNSIGNED_INT, 0);
 
 		// if (this._isDebug) {

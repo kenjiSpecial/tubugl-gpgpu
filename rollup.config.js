@@ -9,8 +9,6 @@ import babel from 'rollup-plugin-babel';
 import babelrc from 'babelrc-rollup';
 import replace from 'rollup-plugin-replace';
 
-console.log('library name' + pkg.libName + ', version: ' + pkg.version);
-
 export default [
 	// browser-friendly UMD build
 	{
@@ -22,11 +20,7 @@ export default [
 		},
 		plugins: [
 			babel(babelrc()),
-			// resolve(), // so Rollup can find `ms`
-			commonjs(),
-			replace({
-				TUBUGL_VERSOIN: pkg.version
-			})
+			commonjs()
 		]
 	},
 	{
@@ -41,7 +35,7 @@ export default [
 	},
 	{
 		input: './src/index.js',
-		output: [{ file: pkg.module, format: 'es' }],
+		output: [{ file: pkg.esm, format: 'es' }],
 		plugins: [
 			replace({
 				TUBUGL_VERSOIN: pkg.version

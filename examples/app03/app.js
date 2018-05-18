@@ -1,5 +1,4 @@
 const TweenMax = require('gsap');
-import { SRC_ALPHA, ONE, BLEND, DEPTH, COLOR_BUFFER_BIT, DEPTH_BUFFER_BIT } from 'tubugl-constants';
 import { Particle } from './particle';
 import { PerspectiveCamera, CameraController } from 'tubugl-camera';
 
@@ -85,7 +84,7 @@ export default class App {
 
 		let gl = this.gl;
 		gl.viewport(0, 0, this._width, this._height);
-		gl.clear(COLOR_BUFFER_BIT | DEPTH_BUFFER_BIT);
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
 		this._camera.update();
 		this._particle.render(this._camera);

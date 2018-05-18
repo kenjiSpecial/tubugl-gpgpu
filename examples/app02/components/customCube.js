@@ -1,28 +1,14 @@
 import {
-	baseUVShaderVertSrc,
 	baseUVShaderFragSrc,
 	base2ShaderVertSrc,
 	base2ShaderFragSrc,
 	wireFrameFragSrc,
-	baseShaderVertSrc
 } from './shaders/base.shader';
 import { Program, ArrayBuffer, IndexArrayBuffer, VAO } from 'tubugl-core';
-import {
-	CULL_FACE,
-	FRONT,
-	BACK,
-	TRIANGLES,
-	UNSIGNED_SHORT,
-	DEPTH_TEST,
-	SRC_ALPHA,
-	ZERO,
-	BLEND,
-	LINES,
-	ONE_MINUS_SRC_ALPHA
-} from 'tubugl-constants';
+
 import { generateWireframeIndices } from 'tubugl-utils';
-import { Object3D } from 'tubugl-3d-shape/src/object3D';
-import { SwapRenderer } from '../../src/index';
+import { Object3D } from 'tubugl-3d-shape';
+import { SwapRenderer } from '../../../src/swapRenderer';
 
 export const cubeCollectionShaderVertSrc = `
 attribute vec4 position;
@@ -319,33 +305,33 @@ export class Cube extends Object3D {
 
 	draw() {
 		if (this._side === 'double') {
-			this._gl.disable(CULL_FACE);
+			this._gl.disable(this._gl.CULL_FACE);
 		} else if (this._side === 'front') {
-			this._gl.enable(CULL_FACE);
-			this._gl.cullFace(BACK);
+			this._gl.enable(this._gl.CULL_FACE);
+			this._gl.cullFace(this._gl.BACK);
 		} else {
-			this._gl.enable(CULL_FACE);
-			this._gl.cullFace(FRONT);
+			this._gl.enable(this._gl.CULL_FACE);
+			this._gl.cullFace(this._gl.FRONT);
 		}
 
-		if (this._isDepthTest) this._gl.enable(DEPTH_TEST);
-		else this._gl.disable(DEPTH_TEST);
+		if (this._isDepthTest) this._gl.enable(this._gl.DEPTH_TEST);
+		else this._gl.disable(this._gl.DEPTH_TEST);
 
 		if (this._isTransparent) {
-			this.gl.blendFunc(SRC_ALPHA, ONE_MINUS_SRC_ALPHA);
-			this._gl.enable(BLEND);
+			this.gl.blendFunc(this._gl.SRC_ALPHA, this._gl.ONE_MINUS_SRC_ALPHA);
+			this._gl.enable(this._gl.BLEND);
 		} else {
-			this._gl.blendFunc(SRC_ALPHA, ZERO);
-			this._gl.disable(BLEND);
+			this._gl.blendFunc(this._gl.SRC_ALPHA, this._gl.ZERO);
+			this._gl.disable(this._gl.BLEND);
 		}
 
-		this._gl.drawElements(TRIANGLES, this._cnt, UNSIGNED_SHORT, 0);
+		this._gl.drawElements(this._gl.TRIANGLES, this._cnt, this._gl.UNSIGNED_SHORT, 0);
 
 		return this;
 	}
 
 	drawWireframe() {
-		this._gl.drawElements(LINES, this._wireframeIndexCnt, UNSIGNED_SHORT, 0);
+		this._gl.drawElements(this._gl.LINES, this._wireframeIndexCnt, this._gl.UNSIGNED_SHORT, 0);
 
 		return;
 	}

@@ -1,5 +1,4 @@
 import { Program, ArrayBuffer, FrameBuffer } from 'tubugl-core';
-import { FLOAT, TRIANGLES, BLEND } from 'tubugl-constants';
 import { vertexShader, debugFragmentShader } from './shader';
 
 export class FrameBufferRenderer {
@@ -59,7 +58,7 @@ export class FrameBufferRenderer {
 		this._gl.clearColor(0, 0, 0, 1);
 		this._gl.clear(this._gl.COLOR_BUFFER_BIT);
 
-		this._gl.disable(BLEND);
+		this._gl.disable(this._gl.BLEND);
 
 		for (let key in textures) {
 			let texture = textures[key];
@@ -124,7 +123,7 @@ export class FrameBufferRenderer {
 		}
 
 		// render
-		this._gl.drawArrays(TRIANGLES, 0, this._drawCnt);
+		this._gl.drawArrays(this._gl.TRIANGLES, 0, this._drawCnt);
 
 		this.frameBuffer.unbind();
 
@@ -143,8 +142,8 @@ export class FrameBufferRenderer {
 		this._debugProgram.setUniformTexture(this.frameBuffer.texture, 'uTexture');
 
 		this._positionBuffer.bind().attribPointer(this._debugProgram);
-		this._gl.disable(BLEND);
-		this._gl.drawArrays(TRIANGLES, 0, this._drawCnt);
+		this._gl.disable(this._gl.BLEND);
+		this._gl.drawArrays(this._gl.TRIANGLES, 0, this._drawCnt);
 
 		return this;
 	}

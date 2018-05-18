@@ -1,72 +1,8 @@
 // const dat = require('dat.gui/build/dat.gui.min');
 // const TweenLite = require('gsap/TweenLite');
 const TweenLite = require('gsap/src/uncompressed/TweenLite');
-// const Stats = require('stats.js');
-
-import { SRC_ALPHA, ONE, BLEND, DEPTH, COLOR_BUFFER_BIT, DEPTH_BUFFER_BIT } from 'tubugl-constants';
-
-// import { Cube } from 'tubugl-3d-shape';
 import { Cube } from './components/customCube';
-// import { NormalHelper, GridHelper } from 'tubugl-helper';
 import { PerspectiveCamera, CameraController } from 'tubugl-camera';
-
-const vertexShader = `
-attribute vec4 position;
-
-uniform sampler2D uTexture;
-
-void main() {
-    vec4 pos = texture2D(uTexture, position.zw);
-    gl_Position = vec4(pos.xy, 0.0, 1.0);
-    gl_PointSize = 5.0;
-}`;
-
-const fragmentShader = `
-precision mediump float;
-
-void main() {
-    float alpha = clamp( 4.0 * (1.0 - distance(gl_PointCoord, vec2(0.5))/0.5 ), 0.0, 1.0);
-    if(alpha < 0.001 ) discard;
-
-    gl_FragColor = vec4(1.0, 1.0, 1.0, alpha);
-}
-`;
-
-const velocityFragmentSrc = `
-precision mediump float;
-
-uniform sampler2D positionTexture;
-uniform sampler2D uTexture;
-
-varying vec2 vUv;
-
-void main(){
-	vec4 textureColor = texture2D(uTexture, vec2(vUv.x, 1.0 - vUv.y));
-	vec4 positonTextureColor = texture2D(positionTexture, vec2(vUv.x, 1.0 - vUv.y));
-	
-	if(positonTextureColor.y > 0.0) textureColor.y *= mix(0.99, 0.5,  positonTextureColor.y );
-	else 							textureColor.y += 0.001;
-
-	gl_FragColor = textureColor;
-}
-`;
-
-const positionFragmentSrc = `
-precision mediump float;
-
-uniform sampler2D velocityTexture;
-uniform sampler2D uTexture;
-
-varying vec2 vUv;
-
-void main(){
-	vec2 customUv = vec2(vUv.x, 1.0 - vUv.y);
-	vec4 velocityTextureColor = texture2D( velocityTexture, customUv );
-	vec4 textureColor = texture2D( uTexture, customUv );
-	textureColor.y = velocityTextureColor.y + textureColor.y;
-	gl_FragColor = textureColor;
-}
-`;
 
 export default class App {
 	constructor(params = {}) {
@@ -107,7 +43,7 @@ export default class App {
 	}
 	_setClear() {
 		this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-		this.gl.enable(DEPTH);
+		this.gl.enable(this.gl.DEPTH);
 	}
 
 	_makeBox() {
@@ -166,7 +102,7 @@ export default class App {
 
 		let gl = this.gl;
 		gl.viewport(0, 0, this._width, this._height);
-		gl.clear(COLOR_BUFFER_BIT | DEPTH_BUFFER_BIT);
+		gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
 		this._camera.update();
 		this._box.render(this._camera);

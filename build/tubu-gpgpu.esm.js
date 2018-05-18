@@ -1,5 +1,4 @@
 import { Program, ArrayBuffer, FrameBuffer } from 'tubugl-core';
-import { FLOAT, TRIANGLES, BLEND, HALF_FLOAT } from 'tubugl-constants';
 
 const vertexShader = `
 precision mediump float;
@@ -13,10 +12,8 @@ varying vec2 vUv;
 void main() {
 	float x = mix(-1., 1.0 + uWindowRate * 2.0, position.x);
 	float y = mix(-1., 1.0 + 1.0/uWindowRate * 2.0, position.y);
-    // float uvX = mix(0., 1.0 + uWindowRate, position.x);
+    
     float uvX = position.x + uWindowRate * position.x;
-    // float uvY = 1.0 - mix(0., 1.0 + 1.0/uWindowRate, position.y);
-    // float uvY = 1.0 - (1.0 + 1.0/uWindowRate) * position.y;
     float uvY = 1.0 - position.y - position.y/uWindowRate;
 
 	gl_Position = vec4(x, y, position.z, 1.0);
@@ -101,7 +98,7 @@ class SwapRenderer {
 		this._gl.clearColor(0, 0, 0, 1);
 		this._gl.clear(this._gl.COLOR_BUFFER_BIT);
 
-		this._gl.disable(BLEND);
+		this._gl.disable(this._gl.BLEND);
 
 		if (enablePrevTexture)
 			this._program.setUniformTexture(this._buffers.read.texture, 'uTexture');
@@ -169,7 +166,7 @@ class SwapRenderer {
 		}
 
 		// render
-		this._gl.drawArrays(TRIANGLES, 0, this._drawCnt);
+		this._gl.drawArrays(this._gl.TRIANGLES, 0, this._drawCnt);
 
 		this._buffers.write.unbind();
 
@@ -188,8 +185,8 @@ class SwapRenderer {
 		this._debugProgram.setUniformTexture(this._buffers.write.texture, 'uTexture');
 
 		this._positionBuffer.bind().attribPointer(this._debugProgram);
-		this._gl.disable(BLEND);
-		this._gl.drawArrays(TRIANGLES, 0, this._drawCnt);
+		this._gl.disable(this._gl.BLEND);
+		this._gl.drawArrays(this._gl.TRIANGLES, 0, this._drawCnt);
 
 		return this;
 	}
@@ -233,7 +230,7 @@ class SwapRenderer {
 		let frameBuffer0 = new FrameBuffer(
 			this._gl, {
 				dataArray: params.dataArray,
-				type: FLOAT
+				type: this._gl.FLOAT
 			},
 			this._width,
 			this._height
@@ -243,7 +240,7 @@ class SwapRenderer {
 		let frameBuffer1 = new FrameBuffer(
 			this._gl, {
 				dataArray: params.dataArray,
-				type: this._isFloatTexture ? FLOAT : HALF_FLOAT
+				type: this._isFloatTexture ? this._gl.FLOAT : this._gl.HALF_FLOAT
 			},
 			this._width,
 			this._height
@@ -365,7 +362,7 @@ class FrameBufferRenderer {
 		this._gl.clearColor(0, 0, 0, 1);
 		this._gl.clear(this._gl.COLOR_BUFFER_BIT);
 
-		this._gl.disable(BLEND);
+		this._gl.disable(this._gl.BLEND);
 
 		for (let key in textures) {
 			let texture = textures[key];
@@ -430,7 +427,7 @@ class FrameBufferRenderer {
 		}
 
 		// render
-		this._gl.drawArrays(TRIANGLES, 0, this._drawCnt);
+		this._gl.drawArrays(this._gl.TRIANGLES, 0, this._drawCnt);
 
 		this.frameBuffer.unbind();
 
@@ -449,8 +446,8 @@ class FrameBufferRenderer {
 		this._debugProgram.setUniformTexture(this.frameBuffer.texture, 'uTexture');
 
 		this._positionBuffer.bind().attribPointer(this._debugProgram);
-		this._gl.disable(BLEND);
-		this._gl.drawArrays(TRIANGLES, 0, this._drawCnt);
+		this._gl.disable(this._gl.BLEND);
+		this._gl.drawArrays(this._gl.TRIANGLES, 0, this._drawCnt);
 
 		return this;
 	}
@@ -541,6 +538,6 @@ class FrameBufferRenderer {
 	}
 }
 
-// console.log('[tubugl-gpgpu] version: 1.3.3, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
+// console.log('[tubugl-gpgpu] version: 1.4.0, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
 
 export { SwapRenderer, FrameBufferRenderer };

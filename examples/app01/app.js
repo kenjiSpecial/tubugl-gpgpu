@@ -1,10 +1,6 @@
-// const dat = require('dat.gui/build/dat.gui.min');
 const TweenMax = require('gsap');
-// const Stats = require('stats.js');
-
 import { Program, ArrayBuffer } from 'tubugl-core';
 import { SwapRenderer } from '../../src/index';
-import { SRC_ALPHA, ONE, BLEND } from 'tubugl-constants';
 
 const vertexShader = `
 attribute vec4 position;
@@ -194,8 +190,8 @@ export default class App {
 		this._obj.program.setUniformTexture(texture, 'uTexture');
 		texture.activeTexture().bind();
 
-		this.gl.enable(BLEND);
-		this.gl.blendFunc(SRC_ALPHA, ONE);
+		this.gl.enable(this.gl.BLEND);
+		this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
 		this.gl.drawArrays(this.gl.POINTS, 0, this._obj.count);
 
 		if (this._isDebugView) {
