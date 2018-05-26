@@ -8,6 +8,7 @@ import {
 	debugFragmentShader
 } from './shader';
 
+const HALF_FLOAT = 0x8D61;
 export class SwapRenderer {
 	/**
 	 *
@@ -37,7 +38,7 @@ export class SwapRenderer {
 		this.isDebug = params.isDebug;
 		this.programs = {};
 
-		this._makeProgram(params);
+		if (params.fragmentShaderSrc) this._makeProgram(params);
 		this._makeFramebuffer(params);
 
 		if (params.isDebug) this._makeDebugProgram();
@@ -207,7 +208,7 @@ export class SwapRenderer {
 		let frameBuffer0 = new FrameBuffer(
 			this._gl, {
 				dataArray: params.dataArray,
-				type: this._gl.FLOAT
+				type: this._isFloatTexture ? this._gl.FLOAT : HALF_FLOAT
 			},
 			this._width,
 			this._height
@@ -217,7 +218,7 @@ export class SwapRenderer {
 		let frameBuffer1 = new FrameBuffer(
 			this._gl, {
 				dataArray: params.dataArray,
-				type: this._isFloatTexture ? this._gl.FLOAT : this._gl.HALF_FLOAT
+				type: this._isFloatTexture ? this._gl.FLOAT : HALF_FLOAT
 			},
 			this._width,
 			this._height
@@ -232,6 +233,11 @@ export class SwapRenderer {
 		};
 	}
 
+	/**
+	 * get texture
+	 * 
+	 * @param {String} type 
+	 */
 	updateTexture(type = 'read') {
 		let frameBuffer;
 
@@ -244,6 +250,7 @@ export class SwapRenderer {
 	}
 
 	/**
+	 * Add Program 
 	 *
 	 * @param {String} shaderSrc fragment shader source file
 	 * @param {String} programName programName

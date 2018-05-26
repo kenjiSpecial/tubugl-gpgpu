@@ -32,6 +32,7 @@ var createClass = function () {
   };
 }();
 
+var HALF_FLOAT = 0x8D61;
 var SwapRenderer = function () {
 	/**
   *
@@ -66,7 +67,7 @@ var SwapRenderer = function () {
 		this.isDebug = params.isDebug;
 		this.programs = {};
 
-		this._makeProgram(params);
+		if (params.fragmentShaderSrc) this._makeProgram(params);
 		this._makeFramebuffer(params);
 
 		if (params.isDebug) this._makeDebugProgram();
@@ -219,13 +220,13 @@ var SwapRenderer = function () {
 		value: function _makeFramebuffer(params) {
 			var frameBuffer0 = new tubuglCore.FrameBuffer(this._gl, {
 				dataArray: params.dataArray,
-				type: this._gl.FLOAT
+				type: this._isFloatTexture ? this._gl.FLOAT : HALF_FLOAT
 			}, this._width, this._height);
 			frameBuffer0.unbind();
 
 			var frameBuffer1 = new tubuglCore.FrameBuffer(this._gl, {
 				dataArray: params.dataArray,
-				type: this._isFloatTexture ? this._gl.FLOAT : this._gl.HALF_FLOAT
+				type: this._isFloatTexture ? this._gl.FLOAT : HALF_FLOAT
 			}, this._width, this._height);
 			frameBuffer1.unbind();
 
@@ -236,6 +237,13 @@ var SwapRenderer = function () {
 				back: frameBuffer1
 			};
 		}
+
+		/**
+   * get texture
+   * 
+   * @param {String} type 
+   */
+
 	}, {
 		key: 'updateTexture',
 		value: function updateTexture() {
@@ -251,6 +259,7 @@ var SwapRenderer = function () {
 		}
 
 		/**
+   * Add Program 
    *
    * @param {String} shaderSrc fragment shader source file
    * @param {String} programName programName
@@ -528,7 +537,7 @@ var FrameBufferRenderer = function () {
 	return FrameBufferRenderer;
 }();
 
-// console.log('[tubugl-gpgpu] version: 1.4.0, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
+// console.log('[tubugl-gpgpu] version: 1.5.0, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
 
 exports.SwapRenderer = SwapRenderer;
 exports.FrameBufferRenderer = FrameBufferRenderer;

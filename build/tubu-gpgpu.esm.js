@@ -31,6 +31,7 @@ void main(){
 	gl_FragColor = vec4(texture2D( uTexture, vUv).rgb, 1.0);
 }`;
 
+const HALF_FLOAT = 0x8D61;
 class SwapRenderer {
 	/**
 	 *
@@ -60,7 +61,7 @@ class SwapRenderer {
 		this.isDebug = params.isDebug;
 		this.programs = {};
 
-		this._makeProgram(params);
+		if (params.fragmentShaderSrc) this._makeProgram(params);
 		this._makeFramebuffer(params);
 
 		if (params.isDebug) this._makeDebugProgram();
@@ -230,7 +231,7 @@ class SwapRenderer {
 		let frameBuffer0 = new FrameBuffer(
 			this._gl, {
 				dataArray: params.dataArray,
-				type: this._gl.FLOAT
+				type: this._isFloatTexture ? this._gl.FLOAT : HALF_FLOAT
 			},
 			this._width,
 			this._height
@@ -240,7 +241,7 @@ class SwapRenderer {
 		let frameBuffer1 = new FrameBuffer(
 			this._gl, {
 				dataArray: params.dataArray,
-				type: this._isFloatTexture ? this._gl.FLOAT : this._gl.HALF_FLOAT
+				type: this._isFloatTexture ? this._gl.FLOAT : HALF_FLOAT
 			},
 			this._width,
 			this._height
@@ -255,6 +256,11 @@ class SwapRenderer {
 		};
 	}
 
+	/**
+	 * get texture
+	 * 
+	 * @param {String} type 
+	 */
 	updateTexture(type = 'read') {
 		let frameBuffer;
 
@@ -267,6 +273,7 @@ class SwapRenderer {
 	}
 
 	/**
+	 * Add Program 
 	 *
 	 * @param {String} shaderSrc fragment shader source file
 	 * @param {String} programName programName
@@ -538,6 +545,6 @@ class FrameBufferRenderer {
 	}
 }
 
-// console.log('[tubugl-gpgpu] version: 1.4.0, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
+// console.log('[tubugl-gpgpu] version: 1.5.0, %o', 'https://github.com/kenjiSpecial/tubugl-gpgpu');
 
 export { SwapRenderer, FrameBufferRenderer };

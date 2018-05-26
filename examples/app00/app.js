@@ -2,8 +2,13 @@ const dat = require('../vendor/dat.gui.min');
 const TweenMax = require('gsap');
 const Stats = require('../vendor/stats.min');
 
-import { Program, ArrayBuffer } from 'tubugl-core';
-import { SwapRenderer } from '../../src/index';
+import {
+	Program,
+	ArrayBuffer
+} from 'tubugl-core';
+import {
+	SwapRenderer
+} from '../../src/index';
 
 const vertexShader = `
 attribute vec4 position;
@@ -49,7 +54,9 @@ export default class App {
 		this._height = params.height ? params.height : window.innerHeight;
 
 		this.canvas = document.createElement('canvas');
-		this.gl = this.canvas.getContext('webgl', { antialias: true });
+		this.gl = this.canvas.getContext('webgl', {
+			antialias: true
+		});
 
 		if (!this.gl.getExtension('OES_texture_float')) {
 			let ext = this.gl.getExtension('OES_texture_half_float');
@@ -105,8 +112,7 @@ export default class App {
 		};
 
 		this._swapRenderer = new SwapRenderer(
-			this.gl,
-			{
+			this.gl, {
 				fragmentShaderSrc: positionFragmentSrc,
 				isDebug: true,
 				isFloatTexture: this._isFloatTexture
@@ -180,7 +186,7 @@ export default class App {
 			this.playAndStopGui.name('play');
 		}
 	}
-	
+
 
 	resize(width, height) {
 		this._width = width;
