@@ -10,7 +10,7 @@ varying vec2 vUv;
 float hash(vec2 p) { return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); }
 
 void main(){
-    vec2 customUv = vec2(vUv.x, 1.0 - vUv.y);
+    vec2 customUv = vec2(vUv.x, vUv.y);
 	vec4 textureColor = texture2D(uTexture, customUv);
 	vec4 positonTextureColor = texture2D(positionTexture, customUv);
 

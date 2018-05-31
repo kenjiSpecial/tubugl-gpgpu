@@ -6,7 +6,7 @@ varying vec2 vUv;
 
 void main(){
     
-	vec2 customUv = vec2(vUv.x, 1.0 - vUv.y);
+	vec2 customUv = vec2(vUv.x, vUv.y);
     vec4 velocity = texture2D( velocityTexture, customUv );
 	vec4 position = texture2D( uTexture, customUv );
     

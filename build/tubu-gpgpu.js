@@ -4,7 +4,7 @@
 	(factory((global.Tubu = {}),global.tubuglCore));
 }(this, (function (exports,tubuglCore) { 'use strict';
 
-	var vertexShader = "\nprecision mediump float;\n\nattribute vec4 position;\n\nuniform float uWindowRate;\n\nvarying vec2 vUv;\n\nvoid main() {\n\tfloat x = mix(-1., 1.0 + uWindowRate * 2.0, position.x);\n\tfloat y = mix(-1., 1.0 + 1.0/uWindowRate * 2.0, position.y);\n    \n    float uvX = position.x + uWindowRate * position.x;\n    float uvY = 1.0 - position.y - position.y/uWindowRate;\n\n\tgl_Position = vec4(x, y, position.z, 1.0);\n\tvUv = vec2(uvX, uvY);\n}";
+	var vertexShader = "\nprecision mediump float;\n\nattribute vec4 position;\n\nuniform float uWindowRate;\n\nvarying vec2 vUv;\n\nvoid main() {\n\tfloat x = mix(-1., 1.0 + uWindowRate * 2.0, position.x);\n\tfloat y = mix(-1., 1.0 + 1.0/uWindowRate * 2.0, position.y);\n    \n    float uvX = position.x + uWindowRate * position.x;\n    float uvY = 1.0 - position.y - position.y/uWindowRate;\n\n\tgl_Position = vec4(x, y, position.z, 1.0);\n\tvUv = vec2(uvX, 1.0 - uvY);\n}";
 
 	var debugFragmentShader = "\nprecision mediump float;\n\nvarying vec2 vUv;\n\nuniform sampler2D uTexture;\n\nvoid main(){\n\tgl_FragColor = vec4(texture2D( uTexture, vUv).rgb, 1.0);\n}";
 

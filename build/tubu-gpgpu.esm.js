@@ -17,7 +17,7 @@ void main() {
     float uvY = 1.0 - position.y - position.y/uWindowRate;
 
 	gl_Position = vec4(x, y, position.z, 1.0);
-	vUv = vec2(uvX, uvY);
+	vUv = vec2(uvX, 1.0 - uvY);
 }`;
 
 const debugFragmentShader = `
