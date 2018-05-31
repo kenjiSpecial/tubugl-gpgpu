@@ -3,7 +3,7 @@
   "version": "1.5.1",
   "description": "gpgpu util for tubugl",
   "main": "build/tubu-gpgpu.js",
-  "cjs": "build/tubu-gpgpu.cjs.js",
+  "module": "build/tubu-gpgpu.cjs.js",
   "esm": "build/tubu-gpgpu.esm.js",
   "libName": "Tubu",
   "license": "MIT",
