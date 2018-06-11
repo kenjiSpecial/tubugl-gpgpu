@@ -1,6 +1,6 @@
 {
   "name": "tubugl-gpgpu",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "gpgpu util for tubugl",
   "main": "build/tubu-gpgpu.js",
   "module": "build/tubu-gpgpu.cjs.js",
@@ -44,7 +44,7 @@
     "tubugl-3d-shape": "^1.6.2",
     "tubugl-camera": "^1.4.4",
     "tubugl-helper": "^1.1.0",
-    "tubugl-utils": "^1.1.1",
+    "tubugl-utils": "^1.1.2",
     "uil": "^1.0.1"
   }
 }
